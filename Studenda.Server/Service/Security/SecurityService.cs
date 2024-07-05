@@ -121,13 +121,15 @@ public class SecurityService(
         }
 
         var roles = await RoleService.GetDefault();
-        var role = roles.FirstOrDefault();
 
-        if (role is null)
+        foreach (var role in roles)
         {
-            return false;
+            if (role.Permission == permission)
+            {
+                return true;
+            }
         }
 
-        return permission == role.Permission;
+        return false;
     }
 }

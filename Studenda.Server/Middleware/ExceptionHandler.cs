@@ -19,7 +19,8 @@ public class ExceptionHandler(RequestDelegate requestDelegate)
             await context.Response.WriteAsJsonAsync(new
             {
                 ErrorType = exception.GetType().ToString(),
-                ErrorMessage = exception.Message
+                ErrorMessage = exception.Message,
+                InnerException = exception.InnerException?.ToString()
             });
         }
     }
