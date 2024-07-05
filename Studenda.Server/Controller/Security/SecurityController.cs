@@ -15,7 +15,7 @@ namespace Studenda.Server.Controller.Security;
 /// <summary>
 ///     Контроллер авторизации аккаунтов.
 /// </summary>
-/// <param name="identityContext">Сессия работы с базой данных безопасности.</param>
+/// <param name="dataContext">Сессия работы с базой данных.</param>
 /// <param name="tokenService">Сервис работы с токенами.</param>
 /// <param name="accountService">Сервис работы с аккаунтами.</param>
 /// <param name="roleService">Сервис работы с ролями.</param>
@@ -24,7 +24,7 @@ namespace Studenda.Server.Controller.Security;
 [Route("api/security")]
 [ApiController]
 public class SecurityController(
-    IdentityContext identityContext,
+    DataContext dataContext,
     TokenService tokenService,
     AccountService accountService,
     RoleService roleService,
@@ -32,7 +32,7 @@ public class SecurityController(
     UserManager<IdentityUser> userManager
 ) : ControllerBase
 {
-    private IdentityContext IdentityContext { get; } = identityContext;
+    private DataContext DataContext { get; } = dataContext;
     private TokenService TokenService { get; } = tokenService;
     private AccountService AccountService { get; } = accountService;
     private RoleService RoleService { get; } = roleService;
@@ -109,7 +109,7 @@ public class SecurityController(
             return BadRequest(request);
         }
 
-        var roles = await RoleService.Get(RoleService.DataContext.Roles, [request.Account.RoleId]);
+        var roles = await RoleService.Get(RoleService.DataContext.AccountRoles, [request.Account.RoleId]);
         var role = roles.FirstOrDefault();
 
         if (role is null)
@@ -142,7 +142,7 @@ public class SecurityController(
             return BadRequest(request);
         }
 
-        var roles = await RoleService.Get(RoleService.DataContext.Roles, [request.Account.RoleId]);
+        var roles = await RoleService.Get(RoleService.DataContext.AccountRoles, [request.Account.RoleId]);
         var role = roles.FirstOrDefault();
 
         if (role is null)
@@ -166,7 +166,7 @@ public class SecurityController(
             return Unauthorized();
         }
 
-        var user = await IdentityContext.Users
+        var user = await DataContext.Users
             .FirstOrDefaultAsync(user => user.UserName == User.Identity.Name);
 
         if (user is null)
@@ -222,7 +222,7 @@ public class SecurityController(
             return BadRequest(ModelState);
         }
 
-        var user = await IdentityContext.Users.FirstOrDefaultAsync(user => user.Email == request.Email);
+        var user = await DataContext.Users.FirstOrDefaultAsync(user => user.Email == request.Email);
 
         if (user is null)
         {

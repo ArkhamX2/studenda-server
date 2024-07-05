@@ -1,12 +1,19 @@
+using Studenda.Server.Service.Security;
+
 namespace Studenda.Server.Data.Initialization;
 
 /// <summary>
 ///     Скрипт инициализации контекста данных.
 /// </summary>
 /// <param name="dataContext">Контекст данных.</param>
-class DataInitializationScript(DataContext dataContext) : IInitializationScript
+/// <param name="securityService">Сервис работы с безопасностью.</param>
+class DataInitializationScript(
+    DataContext dataContext,
+    SecurityService securityService
+) : IInitializationScript
 {
     private DataContext DataContext { get; } = dataContext;
+    private SecurityService SecurityService { get; } = securityService;
 
     /// <summary>
     ///     Запустить инициализацию контекста данных.
@@ -19,5 +26,7 @@ class DataInitializationScript(DataContext dataContext) : IInitializationScript
         {
             throw new Exception("Data initialization failed!");
         }
+
+        await SecurityService.CreateDefaultUser();
     }
 }

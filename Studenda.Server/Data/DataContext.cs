@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Studenda.Server.Data.Configuration;
@@ -26,12 +28,12 @@ namespace Studenda.Server.Data;
 ///     При коммите изменений ничего не произойдет.
 /// </summary>
 /// <param name="configuration">Конфигурация базы данных.</param>
-public class DataContext(ContextConfiguration configuration) : DbContext
+public class DataContext(ContextConfiguration configuration) : IdentityDbContext<IdentityUser>
 {
     private ContextConfiguration Configuration { get; } = configuration;
 
     public DbSet<Account> Accounts => Set<Account>();
-    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<Role> AccountRoles => Set<Role>();
 
     public DbSet<Department> Departments => Set<Department>();
     public DbSet<Course> Courses => Set<Course>();

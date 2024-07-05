@@ -13,20 +13,17 @@ namespace Studenda.Server.Service.Security;
 /// </summary>
 /// <param name="configurationManager">Менеджер конфигурации.</param>
 /// <param name="dataContext">Контекст данных.</param>
-/// <param name="identityContext">Контекст данных идентификации.</param>
 /// <param name="accountService">Сервис работы с ролями.</param>
 /// <param name="userManager">Менеджер пользователей.</param>
 public class SecurityService(
     ConfigurationManager configurationManager,
     DataContext dataContext,
-    IdentityContext identityContext,
     RoleService roleService,
     UserManager<IdentityUser> userManager
 )
 {
     private SecurityConfiguration SecurityConfiguration { get; } = configurationManager.SecurityConfiguration;
     private DataContext DataContext { get; } = dataContext;
-    private IdentityContext IdentityContext { get; } = identityContext;
     private RoleService RoleService { get; } = roleService;
     private UserManager<IdentityUser> UserManager { get; } = userManager;
 
@@ -40,9 +37,9 @@ public class SecurityService(
         var roleName = SecurityConfiguration.GetDefaultRoleName();
         var rolePermission = SecurityConfiguration.GetDefaultRolePermission();
 
-        if (!await DataContext.Roles.AnyAsync(role => role.Permission == rolePermission))
+        if (!await DataContext.AccountRoles.AnyAsync(role => role.Permission == rolePermission))
         {
-            await DataContext.Roles.AddAsync(new Role
+            await DataContext.AccountRoles.AddAsync(new Role
             {
                 Name = roleName,
                 Permission = rolePermission,
@@ -53,7 +50,7 @@ public class SecurityService(
             await DataContext.SaveChangesAsync();
         }
 
-        var roleId = await DataContext.Roles.Where(role => role.Permission == rolePermission)
+        var roleId = await DataContext.AccountRoles.Where(role => role.Permission == rolePermission)
             .Select(role => role.Id)
             .FirstAsync();
 
@@ -64,7 +61,7 @@ public class SecurityService(
 
         var userEmail = SecurityConfiguration.GetDefaultUserEmail();
         var userPassword = SecurityConfiguration.GetDefaultUserPassword();
-        var user = await IdentityContext.Users
+        var user = await DataContext.Users
             .FirstOrDefaultAsync(user => user.Email == userEmail);
 
         if (user is null)
@@ -82,7 +79,7 @@ public class SecurityService(
                 throw new Exception("Data initialization failed while creating default user!");
             }
 
-            user = await IdentityContext.Users
+            user = await DataContext.Users
                 .FirstOrDefaultAsync(user => user.Email == userEmail);
         }
 

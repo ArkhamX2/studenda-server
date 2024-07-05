@@ -30,19 +30,4 @@ public class DataConfiguration(IConfiguration configuration) : ConfigurationRepo
             _ => throw new Exception("Unknown connection type!")
         };
     }
-
-    public ContextConfiguration GetIdentityContextConfiguration(bool isDebugMode)
-    {
-        var connectionString = Configuration.GetConnectionString("Identity");
-
-        HandleStringValue(connectionString, "Identity connection string is null or empty!");
-
-        return GetConnectionType().ToLower() switch
-        {
-            "sqlite" => new SqliteConfiguration(connectionString!, isDebugMode),
-            "mysql" => new MysqlConfiguration(connectionString!, ServerVersion.AutoDetect(connectionString),
-                isDebugMode),
-            _ => throw new Exception("Unknown connection type!")
-        };
-    }
 }

@@ -16,7 +16,7 @@ public class RoleService(DataContext dataContext) : DataEntityService(dataContex
     /// <returns>Список ролей.</returns>
     public async Task<List<Role>> GetDefault()
     {
-        return await DataContext.Roles
+        return await DataContext.AccountRoles
             .Where(role => role.CanRegister)
             .ToListAsync();
     }
@@ -42,7 +42,7 @@ public class RoleService(DataContext dataContext) : DataEntityService(dataContex
             .Select(account => account.RoleId)
             .ToList();
 
-        return await DataContext.Roles
+        return await DataContext.AccountRoles
             .Where(role => roleIds.Contains(role.Id.GetValueOrDefault()))
             .ToListAsync();
     }
@@ -60,7 +60,7 @@ public class RoleService(DataContext dataContext) : DataEntityService(dataContex
             throw new ArgumentException("Invalid arguments!");
         }
 
-        return await DataContext.Roles
+        return await DataContext.AccountRoles
             .Where(role => permissions.Contains(role.Permission))
             .ToListAsync();
     }

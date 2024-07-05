@@ -42,6 +42,15 @@ internal class Program
 
         var application = builder.Build();
 
+        RunApplication(application);
+    }
+
+    /// <summary>
+    ///    Запустить приложение.
+    /// </summary>
+    /// <param name="application">Приложение.</param>
+    private static void RunApplication(WebApplication application)
+    {
         application.UseMiddleware<ExceptionHandler>();
         application.UseAuthentication();
         application.UseAuthorization();
@@ -84,13 +93,9 @@ internal class Program
     private static void RegisterDataSources(IServiceCollection services, DataConfiguration configuration)
     {
         var dataConfiguration = configuration.GetDefaultContextConfiguration(IsDebugMode);
-        var identityConfiguration = configuration.GetIdentityContextConfiguration(IsDebugMode);
 
         services.AddScoped(provider => new DataContext(dataConfiguration));
-        services.AddScoped(provider => new IdentityContext(identityConfiguration));
-
         services.AddScoped<DataInitializationScript>();
-        services.AddScoped<IdentityInitializationScript>();
     }
 
     /// <summary>
@@ -101,7 +106,7 @@ internal class Program
     private static void RegisterIdentityServices(IServiceCollection services, IdentityConfiguration configuration)
     {
         services.AddIdentity<IdentityUser, IdentityRole>()
-            .AddEntityFrameworkStores<IdentityContext>()
+            .AddEntityFrameworkStores<DataContext>()
             .AddUserManager<UserManager<IdentityUser>>()
             .AddRoleManager<RoleManager<IdentityRole>>()
             .AddSignInManager<SignInManager<IdentityUser>>();
@@ -186,6 +191,5 @@ internal class Program
         using var scope = application.Services.CreateScope();
 
         await scope.ServiceProvider.GetRequiredService<DataInitializationScript>().Run();
-        await scope.ServiceProvider.GetRequiredService<IdentityInitializationScript>().Run();
     }
 }

@@ -26,7 +26,7 @@ public class RoleController(RoleService roleService) : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<Role>>> Get([FromQuery] List<int> ids)
     {
-        return await RoleService.Get(RoleService.DataContext.Roles, ids);
+        return await RoleService.Get(RoleService.DataContext.AccountRoles, ids);
     }
 
     /// <summary>
@@ -72,7 +72,7 @@ public class RoleController(RoleService roleService) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] List<Role> entities)
     {
-        var status = await RoleService.Set(RoleService.DataContext.Roles, entities);
+        var status = await RoleService.Set(RoleService.DataContext.AccountRoles, entities);
 
         if (!status)
         {
@@ -91,7 +91,7 @@ public class RoleController(RoleService roleService) : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete([FromBody] List<int> ids)
     {
-        var status = await RoleService.Remove(RoleService.DataContext.Roles, ids);
+        var status = await RoleService.Remove(RoleService.DataContext.AccountRoles, ids);
 
         if (!status)
         {

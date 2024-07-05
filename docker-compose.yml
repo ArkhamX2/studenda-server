@@ -7,11 +7,8 @@
     depends_on:
       database:
         condition: 'service_healthy'
-      database_identity:
-        condition: 'service_healthy'
     environment:
       ConnectionStrings__Default: 'Server=database;Port=3306;Database=studenda_default;Uid=arkham;Pwd=secret'
-      ConnectionStrings__Identity: 'Server=database_identity;Port=3306;Database=studenda_identity;Uid=arkham;Pwd=secret'
     networks:
       - 'inner'
 
@@ -36,30 +33,8 @@
     networks:
       - 'inner'
 
-  database_identity:
-    container_name: 'database_identity'
-    image: 'mariadb:latest'
-    environment:
-      MARIADB_DATABASE: 'studenda_identity'
-      MARIADB_USER: 'arkham'
-      MARIADB_PASSWORD: 'secret'
-      MARIADB_ROOT_PASSWORD: 'verysecret'
-    healthcheck:
-      test: 'mariadb --password=$$MARIADB_ROOT_PASSWORD --execute "SHOW DATABASES;"'
-      start_period: '5s'
-      interval: '2s'
-      timeout: '10s'
-      retries: 10
-    ports:
-      - '3307:3306'
-    volumes:
-      - 'data_identity:/var/lib/mysql'
-    networks:
-      - 'inner'
-
 volumes:
   data:
-  data_identity:
 
 networks:
   inner:
