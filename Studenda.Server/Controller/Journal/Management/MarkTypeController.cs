@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Studenda.Server.Configuration.Static;
 using Studenda.Server.Middleware.Security.Requirement;
 using Studenda.Server.Model.Journal.Management;
 using Studenda.Server.Service;
@@ -10,7 +11,7 @@ namespace Studenda.Server.Controller.Journal.Management;
 ///     Контроллер для работы с объектами типа <see cref="MarkType" />.
 /// </summary>
 /// <param name="dataEntityService">Сервис моделей.</param>
-[Route("api/journal/mark-type")]
+[Route(UpstreamConfiguration.JournalMarkType)]
 [ApiController]
 public class MarkTypeController(DataEntityService dataEntityService) : ControllerBase
 {

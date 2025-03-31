@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Studenda.Server.Configuration.Static;
 using Studenda.Server.Middleware.Security.Requirement;
 using Studenda.Server.Model.Schedule.Management;
 using Studenda.Server.Service;
@@ -10,7 +11,7 @@ namespace Studenda.Server.Controller.Schedule.Management;
 ///     Контроллер для работы с объектами типа <see cref="DayPosition" />.
 /// </summary>
 /// <param name="dataEntityService">Сервис моделей.</param>
-[Route("api/schedule/day-position")]
+[Route(UpstreamConfiguration.ScheduleDayPosition)]
 [ApiController]
 public class DayPositionController(DataEntityService dataEntityService) : ControllerBase
 {

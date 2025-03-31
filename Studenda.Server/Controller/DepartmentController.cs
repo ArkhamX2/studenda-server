@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Studenda.Server.Configuration.Static;
 using Studenda.Server.Middleware.Security.Requirement;
 using Studenda.Server.Model.Common;
 using Studenda.Server.Service;
@@ -10,7 +11,7 @@ namespace Studenda.Server.Controller;
 ///     Контроллер для работы с объектами типа <see cref="Department" />.
 /// </summary>
 /// <param name="dataEntityService">Сервис моделей.</param>
-[Route("api/department")]
+[Route(UpstreamConfiguration.Department)]
 [ApiController]
 public class DepartmentController(DataEntityService dataEntityService) : ControllerBase
 {

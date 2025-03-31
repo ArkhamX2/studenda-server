@@ -51,7 +51,7 @@ internal class Program
     /// <param name="application">Приложение.</param>
     private static void RunApplication(WebApplication application)
     {
-        application.UseMiddleware<ExceptionHandler>();
+        application.UseMiddleware<ExceptionHandler>(IsDebugMode);
         application.UseAuthentication();
         application.UseAuthorization();
         application.MapControllers();

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Studenda.Server.Configuration.Static;
 using Studenda.Server.Middleware.Security.Requirement;
 using Studenda.Server.Service.Journal;
 using Task = Studenda.Server.Model.Journal.Task;
@@ -10,7 +11,7 @@ namespace Studenda.Server.Controller.Journal;
 ///     Контроллер для работы с объектами типа <see cref="Task" />.
 /// </summary>
 /// <param name="taskService">Сервис моделей.</param>
-[Route("api/journal/task")]
+[Route(UpstreamConfiguration.JournalTask)]
 [ApiController]
 public class TaskController(TaskService taskService) : ControllerBase
 {

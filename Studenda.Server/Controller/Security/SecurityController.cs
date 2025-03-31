@@ -21,7 +21,7 @@ namespace Studenda.Server.Controller.Security;
 /// <param name="roleService">Сервис работы с ролями.</param>
 /// <param name="securityService">Сервис работы с безопасностью.</param>
 /// <param name="userManager">Менеджер работы с пользователями.</param>
-[Route("api/security")]
+[Route(UpstreamConfiguration.Security)]
 [ApiController]
 public class SecurityController(
     DataContext dataContext,

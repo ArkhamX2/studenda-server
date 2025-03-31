@@ -7,10 +7,7 @@ namespace Studenda.Server.Data.Initialization;
 /// </summary>
 /// <param name="dataContext">Контекст данных.</param>
 /// <param name="securityService">Сервис работы с безопасностью.</param>
-class DataInitializationScript(
-    DataContext dataContext,
-    SecurityService securityService
-) : IInitializationScript
+class DataInitializationScript(DataContext dataContext, SecurityService securityService)
 {
     private DataContext DataContext { get; } = dataContext;
     private SecurityService SecurityService { get; } = securityService;

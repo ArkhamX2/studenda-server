@@ -13,7 +13,7 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
-      "launchUrl": "api/security",
+      "launchUrl": "security",
       "applicationUrl": "https://localhost:7037;http://localhost:5255",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -22,7 +22,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": false,
-      "launchUrl": "api/security",
+      "launchUrl": "security",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

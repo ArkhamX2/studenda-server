@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Studenda.Server.Configuration.Static;
 using Studenda.Server.Middleware.Security.Requirement;
 using Studenda.Server.Model.Schedule.Management;
 using Studenda.Server.Service.Schedule;
@@ -10,7 +11,7 @@ namespace Studenda.Server.Controller.Schedule.Management;
 ///     Контроллер для работы с объектами типа <see cref="WeekType" />.
 /// </summary>
 /// <param name="weekTypeService">Сервис типов недель.</param>
-[Route("api/schedule/week-type")]
+[Route(UpstreamConfiguration.ScheduleWeekType)]
 [ApiController]
 public class WeekTypeController(WeekTypeService weekTypeService) : ControllerBase
 {

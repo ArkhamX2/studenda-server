@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Studenda.Server.Configuration.Static;
 using Studenda.Server.Middleware.Security.Requirement;
 using Studenda.Server.Model.Schedule;
 using Studenda.Server.Service.Schedule;
@@ -10,7 +11,7 @@ namespace Studenda.Server.Controller.Schedule;
 ///     Контроллер для работы с объектами типа <see cref="Subject" />.
 /// </summary>
 /// <param name="subjectService">Сервис статичных занятий.</param>
-[Route("api/schedule/subject")]
+[Route(UpstreamConfiguration.ScheduleSubject)]
 [ApiController]
 public class SubjectController(SubjectService subjectService) : ControllerBase
 {

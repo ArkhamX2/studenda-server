@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Studenda.Server.Configuration.Static;
 using Studenda.Server.Middleware.Security.Requirement;
 using Studenda.Server.Model.Journal;
 using Studenda.Server.Service.Journal;
@@ -10,7 +11,7 @@ namespace Studenda.Server.Controller.Journal;
 ///     Контроллер для работы с объектами типа <see cref="Session" />.
 /// </summary>
 /// <param name="sessionService">Сервис моделей.</param>
-[Route("api/journal/session")]
+[Route(UpstreamConfiguration.JournalSession)]
 [ApiController]
 public class SessionController(SessionService sessionService) : ControllerBase
 {

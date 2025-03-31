@@ -17,7 +17,7 @@ public class WeekTypeService(DataContext dataContext) : DataEntityService(dataCo
     private const int AcademicYearStartMonth = 9;
 
     /// <summary>
-    ///     День начала учебного года.
+    ///    День начала учебного года.
     ///    TODO: В отдельный класс.
     /// </summary>
     private const int AcademicYearStartDay = 1;

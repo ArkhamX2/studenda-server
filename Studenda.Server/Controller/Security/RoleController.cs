@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Studenda.Server.Configuration.Static;
 using Studenda.Server.Middleware.Security.Requirement;
 using Studenda.Server.Model.Security;
 using Studenda.Server.Service.Security;
@@ -10,7 +11,7 @@ namespace Studenda.Server.Controller.Security;
 ///     Контроллер для работы с объектами типа <see cref="Role" />.
 /// </summary>
 /// <param name="roleService">Сервис моделей.</param>
-[Route("api/security/role")]
+[Route(UpstreamConfiguration.SecurityRole)]
 [ApiController]
 public class RoleController(RoleService roleService) : ControllerBase
 {
