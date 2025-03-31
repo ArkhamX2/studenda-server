@@ -58,6 +58,7 @@ internal class Program
         application.UseCors();
 
         InitializeDataSources(application);
+        InitializeSwagger(application);
 
         application.Run();
     }
@@ -83,6 +84,9 @@ internal class Program
 
         services.AddTransient<ConfigurationManager>();
         services.AddControllers();
+
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
     }
 
     /// <summary>
@@ -191,5 +195,18 @@ internal class Program
         using var scope = application.Services.CreateScope();
 
         await scope.ServiceProvider.GetRequiredService<DataInitializationScript>().Run();
+    }
+
+    /// <summary>
+    ///     Инициализировать Swagger.
+    /// </summary>
+    /// <param name="application">Приложение.</param>
+    private static void InitializeSwagger(WebApplication application)
+    {
+        if (application.Environment.IsDevelopment())
+        {
+            application.UseSwagger();
+            application.UseSwaggerUI();
+        }
     }
 }
