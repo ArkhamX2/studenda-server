@@ -1,5 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Studenda.Server.Data.Util;
 
@@ -13,9 +15,14 @@ public static class DataSerializer
     /// </summary>
     /// <param name="rawData">Объект.</param>
     /// <returns>Строка JSON.</returns>
-    public static string Serialize(object? rawData)
+    public static object Serialize(object? rawData)
     {
-        return JsonConvert.SerializeObject(rawData, Configuration);
+        var json = JsonConvert.SerializeObject(rawData, Configuration);
+
+        return System.Text.Json.JsonSerializer.Deserialize<object>(json, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        }) ?? throw new InvalidOperationException("Failed to deserialize JSON.");
     }
 
     /// <summary>
@@ -35,6 +42,6 @@ public static class DataSerializer
     private static JsonSerializerSettings Configuration { get; } = new()
     {
         PreserveReferencesHandling = PreserveReferencesHandling.All,
-        DefaultValueHandling = DefaultValueHandling.Ignore
+        ContractResolver = new CamelCasePropertyNamesContractResolver()
     };
 }

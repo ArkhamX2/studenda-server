@@ -46,14 +46,14 @@ public class SecurityController(
     [HttpGet]
     public ActionResult<List<Account>> GetSettings()
     {
-        return Ok(new HandshakeResponse
+        return Ok(DataSerializer.Serialize(new HandshakeResponse
         {
             DefaultPermission = PermissionConfiguration.DefaultPermission,
             LeaderPermission = PermissionConfiguration.LeaderPermission,
             TeacherPermission = PermissionConfiguration.TeacherPermission,
             AdminPermission = PermissionConfiguration.AdminPermission,
             CoordinatedUniversalTime = DateTime.UtcNow
-        });
+        }));
     }
 
     /// <summary>
