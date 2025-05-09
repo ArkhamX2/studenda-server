@@ -43,13 +43,13 @@ public class RoleController(RoleService roleService) : ControllerBase
     /// <summary>
     ///     Получить список ролей по идентификаторам аккаунтов.
     /// </summary>
-    /// <param name="accountIds">Идентификаторы аккаунтов.</param>
+    /// <param name="ids">Идентификаторы аккаунтов.</param>
     /// <returns>Результат операции со списком ролей.</returns>
     /// <exception cref="ArgumentException">При пустом списке идентификаторов.</exception>
     [HttpGet("account")]
-    public async Task<List<Role>> GetByAccount(List<int> accountIds)
+    public async Task<List<Role>> GetByAccount([FromQuery] List<int> ids)
     {
-        return await RoleService.GetByAccount(accountIds);
+        return await RoleService.GetByAccount(ids);
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public class RoleController(RoleService roleService) : ControllerBase
     /// <returns>Результат операции со списком ролей.</returns>
     /// <exception cref="ArgumentException">При пустом списке доступов.</exception>
     [HttpGet("permission")]
-    public async Task<List<Role>> GetByPermission(List<string> permissions)
+    public async Task<List<Role>> GetByPermission([FromQuery] List<string> permissions)
     {
         return await RoleService.GetByPermission(permissions);
     }

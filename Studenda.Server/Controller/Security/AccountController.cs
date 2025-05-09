@@ -33,24 +33,24 @@ public class AccountController(AccountService accountService) : ControllerBase
     /// <summary>
     ///     Получить список аккаунтов по идентификаторам групп.
     /// </summary>
-    /// <param name="groupIds">Идентификаторы групп.</param>
+    /// <param name="ids">Идентификаторы групп.</param>
     /// <returns>Результат операции со списком аккаунтов.</returns>
     [HttpGet("group")]
-    public async Task<ActionResult<List<Account>>> GetByGroup([FromQuery] List<int> groupIds)
+    public async Task<ActionResult<List<Account>>> GetByGroup([FromQuery] List<int> ids)
     {
-        return await AccountService.GetByGroup(groupIds);
+        return await AccountService.GetByGroup(ids);
     }
 
     /// <summary>
     ///     Получить список аккаунтов по идентификаторам ролей.
     /// </summary>
-    /// <param name="roleIds">Идентификаторы ролей.</param>
+    /// <param name="ids">Идентификаторы ролей.</param>
     /// <returns>Результат операции со списком аккаунтов.</returns>
     [Authorize(Policy = AdminAuthorizationRequirement.PolicyCode)]
     [HttpGet("role")]
-    public async Task<ActionResult<List<Account>>> GetByRole([FromQuery] List<int> roleIds)
+    public async Task<ActionResult<List<Account>>> GetByRole([FromQuery] List<int> ids)
     {
-        return await AccountService.GetByRole(roleIds);
+        return await AccountService.GetByRole(ids);
     }
 
     /// <summary>
