@@ -4,6 +4,7 @@ using Studenda.Server.Configuration.Static;
 using Studenda.Server.Middleware.Security.Requirement;
 using Studenda.Server.Model.Common;
 using Studenda.Server.Service;
+using Studenda.Server.Service.Schedule;
 
 namespace Studenda.Server.Controller;
 
@@ -13,12 +14,12 @@ namespace Studenda.Server.Controller;
 /// <param name="dataEntityService">Сервис моделей.</param>
 [Route(UpstreamConfiguration.Group)]
 [ApiController]
-public class GroupController(DataEntityService dataEntityService) : ControllerBase
+public class GroupController(GroupService dataEntityService) : ControllerBase
 {
     /// <summary>
     ///     Сервис моделей.
     /// </summary>
-    private DataEntityService DataEntityService { get; } = dataEntityService;
+    private GroupService GroupService { get; } = dataEntityService;
 
     /// <summary>
     ///     Получить список групп.
@@ -30,7 +31,19 @@ public class GroupController(DataEntityService dataEntityService) : ControllerBa
     [HttpGet]
     public async Task<ActionResult<List<Group>>> Get([FromQuery] List<int> ids)
     {
-        return await DataEntityService.Get(DataEntityService.DataContext.Groups, ids);
+        return await GroupService.Get(GroupService.DataContext.Groups, ids);
+    }
+
+    /// <summary>
+    ///    Получить список групп по идентификатору факультета.
+    /// </summary>
+    /// <param name="departmentId">Идентификатор факультета.</param>
+    /// <returns>Результат операции со списком групп.</returns>
+    [HttpGet]
+    [Route("department")]
+    public async Task<ActionResult<List<Group>>> GetByDepartment([FromQuery] int departmentId)
+    {
+        return await GroupService.GetByDepartment(departmentId);
     }
 
     /// <summary>
@@ -42,7 +55,7 @@ public class GroupController(DataEntityService dataEntityService) : ControllerBa
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] List<Group> entities)
     {
-        var status = await DataEntityService.Set(DataEntityService.DataContext.Groups, entities);
+        var status = await GroupService.Set(GroupService.DataContext.Groups, entities);
 
         if (!status)
         {
@@ -59,9 +72,9 @@ public class GroupController(DataEntityService dataEntityService) : ControllerBa
     /// <returns>Результат операции.</returns>
     [Authorize(Policy = AdminAuthorizationRequirement.PolicyCode)]
     [HttpDelete]
-    public async Task<IActionResult> Delete([FromBody] List<int> ids)
+    public async Task<IActionResult> Delete([FromQuery] List<int> ids)
     {
-        var status = await DataEntityService.Remove(DataEntityService.DataContext.Groups, ids);
+        var status = await GroupService.Remove(GroupService.DataContext.Groups, ids);
 
         if (!status)
         {

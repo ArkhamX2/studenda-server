@@ -69,6 +69,8 @@ internal class Program
     /// <param name="services">Коллекция сервисов.</param>
     private static void RegisterCoreServices(IServiceCollection services)
     {
+        services.AddScoped<GroupService>();
+
         services.AddScoped<TokenService>();
         services.AddScoped<SecurityService>();
 
@@ -161,14 +163,6 @@ internal class Program
             options.IncludeErrorDetails = true;
             options.TokenValidationParameters = configuration.GetValidationParameters();
         });
-
-        services.AddCors(options =>
-        {
-            options.AddDefaultPolicy(builder =>
-            {
-                builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-            });
-        });
     }
 
     /// <summary>
@@ -181,7 +175,10 @@ internal class Program
         {
             options.AddDefaultPolicy(builder =>
             {
-                builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                builder.SetIsOriginAllowed(origin => true)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
             });
         });
     }

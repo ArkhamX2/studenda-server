@@ -41,6 +41,22 @@ public class SubjectController(SubjectService subjectService) : ControllerBase
     /// <param name="year">Учебный год.</param>
     /// <returns>Результат операции со списком статичных занятий.</returns>
     [HttpGet]
+    [Route("group-all")]
+    public async Task<ActionResult<List<Subject>>> GetAllByGroup(
+        [FromQuery] int groupId,
+        [FromQuery] int year)
+    {
+        return await SubjectService.GetAllByGroup(groupId, year);
+    }
+
+    /// <summary>
+    ///     Получить список статичных занятий по идентификатору группы.
+    /// </summary>
+    /// <param name="groupId">Идентификатор группы.</param>
+    /// <param name="weekTypeId">Идентификатор типа недели.</param>
+    /// <param name="year">Учебный год.</param>
+    /// <returns>Результат операции со списком статичных занятий.</returns>
+    [HttpGet]
     [Route("group")]
     public async Task<ActionResult<List<Subject>>> GetByGroup(
         [FromQuery] int groupId,
@@ -48,6 +64,22 @@ public class SubjectController(SubjectService subjectService) : ControllerBase
         [FromQuery] int year)
     {
         return await SubjectService.GetByGroup(groupId, weekTypeId, year);
+    }
+
+    /// <summary>
+    ///     Получить список статичных занятий по идентификатору аккаунта.
+    /// </summary>
+    /// <param name="accountId">Идентификатор аккаунта.</param>
+    /// <param name="weekTypeId">Идентификатор типа недели.</param>
+    /// <param name="year">Учебный год.</param>
+    /// <returns>Результат операции со списком статичных занятий.</returns>
+    [HttpGet]
+    [Route("account-all")]
+    public async Task<ActionResult<List<Subject>>> GetAllByAccount(
+        [FromQuery] int accountId,
+        [FromQuery] int year)
+    {
+        return await SubjectService.GetAllByAccount(accountId, year);
     }
 
     /// <summary>
@@ -93,7 +125,7 @@ public class SubjectController(SubjectService subjectService) : ControllerBase
     /// <returns>Результат операции.</returns>
     [Authorize(Policy = AdminAuthorizationRequirement.PolicyCode)]
     [HttpDelete]
-    public async Task<IActionResult> Delete([FromBody] List<int> ids)
+    public async Task<IActionResult> Delete([FromQuery] List<int> ids)
     {
         var status = await SubjectService.Remove(SubjectService.DataContext.Subjects, ids);
 

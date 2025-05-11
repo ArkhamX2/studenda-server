@@ -79,7 +79,7 @@ public class AccountController(AccountService accountService) : ControllerBase
     /// <returns>Результат операции.</returns>
     [Authorize(Policy = AdminAuthorizationRequirement.PolicyCode)]
     [HttpDelete]
-    public async Task<IActionResult> Delete([FromBody] List<int> ids)
+    public async Task<IActionResult> Delete([FromQuery] List<int> ids)
     {
         var status = await AccountService.Remove(ids);
 
