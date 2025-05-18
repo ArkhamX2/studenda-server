@@ -6,11 +6,6 @@ namespace Studenda.Server.Data.Transfer.Security;
 public class SecurityRequest
 {
     /// <summary>
-    ///     Почта.
-    /// </summary>
-    public required string Email { get; init; }
-
-    /// <summary>
     ///     Пароль.
     /// </summary>
     public required string Password { get; init; }

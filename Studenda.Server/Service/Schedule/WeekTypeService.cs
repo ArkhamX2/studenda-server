@@ -80,7 +80,7 @@ public class WeekTypeService(DataContext dataContext) : DataEntityService(dataCo
         {
             var maxIndex = await DataContext.WeekTypes.MaxAsync(type => type.Index);
 
-            if (minIndex - maxIndex > 1)
+            if (Math.Abs(minIndex - maxIndex) > 1)
             {
                 throw new ArgumentException("Indexes must be sequential!");
             }
@@ -95,8 +95,10 @@ public class WeekTypeService(DataContext dataContext) : DataEntityService(dataCo
 
         if (weekTypesToRemove.Any())
         {
-            DataContext.WeekTypes.RemoveRange(weekTypesToRemove);
-            DataContext.SaveChanges();
+            throw new ArgumentException($"Indexes cannot be duplicated!");
+
+            // DataContext.WeekTypes.RemoveRange(weekTypesToRemove);
+            // DataContext.SaveChanges();
         }
 
         return await base.Set(DataContext.WeekTypes, weekTypes);
@@ -120,7 +122,7 @@ public class WeekTypeService(DataContext dataContext) : DataEntityService(dataCo
         var remainingWeekTypes = await DataContext.WeekTypes.OrderBy(type => type.Index).ToListAsync();
 
         // Обновление индексов
-        for (var i = 0; i < remainingWeekTypes.Count; i++)
+        for (var i = WeekType.StartIndex; i < remainingWeekTypes.Count; i++)
         {
             remainingWeekTypes[i].Index = i;
         }

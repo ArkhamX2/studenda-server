@@ -66,23 +66,14 @@ public class IdentityConfiguration(IConfiguration configuration) : Configuration
             .GetValue<bool>("RequireUniqueEmail");
     }
 
-    public IdentityOptions GetOptions()
+    public void ModifyOptions(IdentityOptions options)
     {
-        return new IdentityOptions
-        {
-            Password = new PasswordOptions
-            {
-                RequireDigit = GetPasswordRequireDigit(),
-                RequireLowercase = GetPasswordRequireLowercase(),
-                RequireUppercase = GetPasswordRequireUppercase(),
-                RequireNonAlphanumeric = GetPasswordRequireNonAlphanumeric(),
-                RequiredLength = GetPasswordRequiredLength(),
-                RequiredUniqueChars = GetPasswordRequiredUniqueChars()
-            },
-            User = new UserOptions
-            {
-                RequireUniqueEmail = GetUserRequireUniqueEmail()
-            }
-        };
+        options.Password.RequireDigit = GetPasswordRequireDigit();
+        options.Password.RequireLowercase = GetPasswordRequireLowercase();
+        options.Password.RequireUppercase = GetPasswordRequireUppercase();
+        options.Password.RequireNonAlphanumeric = GetPasswordRequireNonAlphanumeric();
+        options.Password.RequiredLength = GetPasswordRequiredLength();
+        options.Password.RequiredUniqueChars = GetPasswordRequiredUniqueChars();
+        options.User.RequireUniqueEmail = GetUserRequireUniqueEmail();
     }
 }

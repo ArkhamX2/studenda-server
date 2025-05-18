@@ -111,13 +111,14 @@ internal class Program
     /// <param name="configuration">Конфигурации модуля идентификации.</param>
     private static void RegisterIdentityServices(IServiceCollection services, IdentityConfiguration configuration)
     {
-        services.AddIdentity<IdentityUser, IdentityRole>()
-            .AddEntityFrameworkStores<DataContext>()
-            .AddUserManager<UserManager<IdentityUser>>()
-            .AddRoleManager<RoleManager<IdentityRole>>()
-            .AddSignInManager<SignInManager<IdentityUser>>();
-
-        services.Configure<IdentityOptions>(options => configuration.GetOptions());
+        services.AddIdentity<IdentityUser, IdentityRole>(options =>
+        {
+            configuration.ModifyOptions(options);
+        })
+        .AddEntityFrameworkStores<DataContext>()
+        .AddUserManager<UserManager<IdentityUser>>()
+        .AddRoleManager<RoleManager<IdentityRole>>()
+        .AddSignInManager<SignInManager<IdentityUser>>();
     }
 
     /// <summary>

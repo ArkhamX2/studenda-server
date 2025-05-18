@@ -5,5 +5,8 @@
 /// </summary>
 public class LoginRequest : SecurityRequest
 {
-    // PASS.
+    /// <summary>
+    ///     Почта.
+    /// </summary>
+    public required string Email { get; init; }
 }

@@ -161,14 +161,12 @@ public class SecurityController(
     [HttpPost("token")]
     public async Task<IActionResult> RefreshToken()
     {
-        if (User.Identity is null || !User.Identity.IsAuthenticated)
+        if (User.Identity is null || !User.Identity.IsAuthenticated || string.IsNullOrEmpty(User.Identity.Name))
         {
             return Unauthorized();
         }
 
-        var user = await DataContext.Users
-            .FirstOrDefaultAsync(user => user.UserName == User.Identity.Name);
-
+        var user = await UserManager.FindByNameAsync(User.Identity.Name!);
         if (user is null)
         {
             return Unauthorized();
@@ -184,6 +182,87 @@ public class SecurityController(
         if (account is null || role is null)
         {
             return Unauthorized();
+        }
+
+        return Ok(DataSerializer.Serialize(new SecurityResponse
+        {
+            Account = account,
+            Token = TokenService.CreateNewToken(user, role)
+        }));
+    }
+
+    /// <summary>
+    ///     Сменить пароль для текущего авторизованного пользователя.
+    /// </summary>
+    /// <param name="request">Тело запроса с новым паролем.</param>
+    /// <returns>Результат смены пароля.</returns>
+    [Authorize(Policy = DefaultAuthorizationRequirement.PolicyCode)]
+    [HttpPost("password")]
+    public async Task<IActionResult> ChangePassword([FromBody] SecurityRequest request)
+    {
+        if (User.Identity is null || !User.Identity.IsAuthenticated || string.IsNullOrEmpty(User.Identity.Name))
+        {
+            return Unauthorized();
+        }
+
+        var newPassword = request.Password;
+        if (string.IsNullOrWhiteSpace(newPassword))
+        {
+            return BadRequest("New password is required.");
+        }
+
+        var user = await UserManager.FindByNameAsync(User.Identity.Name!);
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+
+        var accounts = await AccountService.GetByIdentityId([user.Id]);
+        var accountIds = accounts.Select(x => x.Id.GetValueOrDefault()).ToList();
+        var roles = await RoleService.GetByAccount(accountIds);
+
+        var account = accounts.First();
+        var role = roles.First();
+
+        if (account is null || role is null)
+        {
+            return Unauthorized();
+        }
+
+        // Удаляем старый пароль, если есть
+        var removeResult = await UserManager.RemovePasswordAsync(user);
+        if (!removeResult.Succeeded)
+        {
+            foreach (var error in removeResult.Errors)
+                ModelState.AddModelError(error.Code, error.Description);
+            return BadRequest(ModelState);
+        }
+
+        // Устанавливаем новый пароль
+        var addResult = await UserManager.AddPasswordAsync(user, newPassword);
+        if (!addResult.Succeeded)
+        {
+            foreach (var error in addResult.Errors)
+                ModelState.AddModelError(error.Code, error.Description);
+            return BadRequest(ModelState);
+        }
+
+        // var result = await UserManager.ChangePasswordAsync(user, request.Password, newPassword);
+        // if (!result.Succeeded)
+        // {
+        //     foreach (var error in result.Errors)
+        //     {
+        //         ModelState.AddModelError(error.Code, error.Description);
+        //     }
+        //     return BadRequest(ModelState);
+        // }
+
+        // меняем флаг смены пароля для аккаунта
+        account.MustChangePassword = false;
+        var status = await AccountService.Set([account]);
+        if (!status)
+        {
+            throw new Exception("Error while updating account!");
         }
 
         return Ok(DataSerializer.Serialize(new SecurityResponse

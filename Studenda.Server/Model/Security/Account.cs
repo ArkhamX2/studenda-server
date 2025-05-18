@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Studenda.Server.Data.Configuration;
 using Studenda.Server.Model.Common;
@@ -30,6 +31,7 @@ public class Account : IdentifiableEntity
     public const int NameLengthMax = 32;
     public const int SurnameLengthMax = 32;
     public const int PatronymicLengthMax = 32;
+    public const int ParentEmailLengthMax = 64;
     public const bool IsRoleIdRequired = true;
     public const bool IsGroupIdRequired = false;
     public const bool IsIdentityIdRequired = false;
@@ -37,6 +39,7 @@ public class Account : IdentifiableEntity
     public const bool IsNameRequired = false;
     public const bool IsSurnameRequired = false;
     public const bool IsPatronymicRequired = false;
+    public const bool IsParentEmailRequired = false;
 
     /// <summary>
     ///     Конфигурация модели <see cref="Account" />.
@@ -79,6 +82,14 @@ public class Account : IdentifiableEntity
             builder.Property(account => account.Patronymic)
                 .HasMaxLength(PatronymicLengthMax)
                 .IsRequired(IsPatronymicRequired);
+
+            builder.Property(account => account.ParentEmail)
+                .HasMaxLength(ParentEmailLengthMax)
+                .IsRequired(IsParentEmailRequired);
+
+            builder.Property(account => account.MustChangePassword)
+                .HasDefaultValue(false)
+                .IsRequired();
 
             base.Configure(builder);
         }
@@ -137,6 +148,17 @@ public class Account : IdentifiableEntity
     ///     Необязательное поле.
     /// </summary>
     public string? Patronymic { get; set; }
+
+    /// <summary>
+    ///     Электронная почта родителя.
+    ///     Необязательное поле.
+    /// </summary>
+    public string? ParentEmail { get; set; }
+
+    /// <summary>
+    ///     Требуется ли смена пароля при следующем входе.
+    /// </summary>
+    public bool MustChangePassword { get; set; } = false;
 
     #endregion
 
