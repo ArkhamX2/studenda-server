@@ -1,0 +1,86 @@
+@startuml
+' Диаграмма: Common (Course, Group, Department) — Model, Controller, Service
+
+package Model {
+    package Common {
+        class Course {
+            +Name
+            +Description
+            +Configure()
+        }
+        class Group {
+            +Name
+            +DepartmentId
+            +CourseId
+            +Configure()
+        }
+        class Department {
+            +Name
+            +Description
+            +Configure()
+        }
+    }
+
+    class Entity {
+        +CreatedAt
+        +UpdatedAt
+        +Configure()
+    }
+
+    class IdentifiableEntity {
+        +Id
+    }
+
+    IdentifiableEntity --|> Entity
+    Course --|> IdentifiableEntity
+    Group --|> IdentifiableEntity
+    Department --|> IdentifiableEntity
+}
+
+package Controller {
+    class CourseController {
+        -DataEntityService
+        +Get()
+        +Post()
+        +Delete()
+    }
+    class GroupController {
+        -GroupService
+        +Get()
+        +GetByDepartment()
+        +GetByCourse()
+        +Post()
+        +Delete()
+    }
+    class DepartmentController {
+        -DataEntityService
+        +Get()
+        +Post()
+        +Delete()
+    }
+}
+
+package Service {
+    class GroupService {
+        +GetByDepartment()
+    }
+
+    class DataEntityService {
+        -DataContext
+        +Get<TSource>()
+        +Set<TSource>()
+        +Remove<TSource>()
+        -DetachTrackedEntities<TSource>()
+    }
+
+    GroupService --|> DataEntityService
+}
+
+' Связи между слоями
+CourseController --> DataEntityService
+GroupController --> GroupService
+DepartmentController --> DataEntityService
+
+GroupService --> Group
+
+@enduml

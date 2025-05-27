@@ -1,0 +1,131 @@
+@startuml
+' Диаграмма: Journal (Absence, Session, Task) — Model, Controller, Service
+
+package Model {
+    package Journal {
+        package Management {
+            class MarkType {
+                +Name
+                +MinValue
+                +MaxValue
+                +Configure()
+            }
+        }
+
+        class Absence {
+            +AccountId
+            +SessionId
+            +Configure()
+        }
+        class Session {
+            +SubjectId
+            +StartedAt
+            +Configure()
+        }
+        class Task {
+            +DisciplineId
+            +SubjectTypeId
+            +IssuerAccountId
+            +AssigneeAccountId
+            +MarkTypeId
+            +Mark
+            +Name
+            +Description
+            +StartedAt
+            +EndedAt
+            +Configure()
+        }
+    }
+    class Entity {
+        +CreatedAt
+        +UpdatedAt
+        +Configure()
+    }
+    class IdentifiableEntity {
+        +Id
+    }
+    IdentifiableEntity --|> Entity
+    MarkType --|> IdentifiableEntity
+    Absence --|> IdentifiableEntity
+    Session --|> IdentifiableEntity
+    Task --|> IdentifiableEntity
+    Absence --> Session
+}
+
+package Controller {
+    package Journal {
+        package Management {
+            class MarkTypeController {
+                -DataEntityService
+                +Get()
+                +Post()
+                +Delete()
+            }
+        }
+
+        class AbsenceController {
+            -AbsenceService
+            +Get()
+            +GetByAccount()
+            +GetBySession()
+            +Post()
+            +Delete()
+        }
+        class SessionController {
+            -SessionService
+            +Get()
+            +GetBySubject()
+            +GetByDate()
+            +Post()
+            +Delete()
+        }
+        class TaskController {
+            -TaskService
+            +Get()
+            +GetByIssuer()
+            +GetByAssignee()
+            +Post()
+            +Delete()
+        }
+    }
+}
+
+package Service {
+    package Journal {
+        class AbsenceService {
+            +GetByAccount()
+            +GetBySession()
+        }
+        class SessionService {
+            +GetBySubject()
+            +GetByDate()
+        }
+        class TaskService {
+            +GetByIssuer()
+            +GetByAssignee()
+        }
+    }
+    class DataEntityService {
+        -DataContext
+        +Get()
+        +Set()
+        +Remove()
+        -DetachTrackedEntities()
+    }
+    AbsenceService --|> DataEntityService
+    SessionService --|> DataEntityService
+    TaskService --|> DataEntityService
+}
+
+' Связи между слоями
+MarkTypeController --> DataEntityService
+AbsenceController --> AbsenceService
+SessionController --> SessionService
+TaskController --> TaskService
+
+DataEntityService --> MarkType
+AbsenceService --> Absence
+SessionService --> Session
+TaskService --> Task
+
+@enduml

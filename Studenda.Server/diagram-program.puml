@@ -1,0 +1,159 @@
+@startuml
+class Program {
+    +Main()
+    -RegisterCoreServices()
+    -RegisterDataSources()
+    -RegisterIdentityServices()
+    -RegisterAuthorizationServices()
+    -RegisterAuthenticationServices()
+    -RegisterCorsServices()
+    -RunApplication()
+    -InitializeDataSources()
+    -InitializeSwagger()
+}
+
+package Configuration {
+    package Repository {
+        abstract class ConfigurationRepository {
+            -Configuration
+            -HandleIntValue()
+            -HandleStringValue()
+            -HandleStringListValue()
+        }
+        class DataConfiguration {
+            +GetDefaultContextConfiguration()
+        }
+        class IdentityConfiguration {
+            +ModifyOptions()
+        }
+        class SecurityConfiguration {
+            ...
+        }
+        class TokenConfiguration {
+            +GetSecurityKey()
+            +GetValidationParameters()
+        }
+    }
+
+    package Static {
+        class PermissionConfiguration {
+            ...
+        }
+        class UpstreamConfiguration {
+            ...
+        }
+    }
+
+    class ConfigurationManager {
+        +DataConfiguration
+        +IdentityConfiguration
+        +SecurityConfiguration
+        +TokenConfiguration
+    }
+
+    ConfigurationManager --> DataConfiguration
+    ConfigurationManager --> IdentityConfiguration
+    ConfigurationManager --> SecurityConfiguration
+    ConfigurationManager --> TokenConfiguration
+    DataConfiguration --|> ConfigurationRepository
+    IdentityConfiguration --|> ConfigurationRepository
+    SecurityConfiguration --|> ConfigurationRepository
+    TokenConfiguration --|> ConfigurationRepository
+}
+
+package Data {
+    package Configuration {
+        abstract class ContextConfiguration {
+            -DateTimeType
+            -DateTimeValueCurrent
+            -ConnectionString
+            -IsDebugMode
+            +ConfigureContext()
+        }
+        class MysqlConfiguration {
+            -ServerVersion
+        }
+        class SqliteConfiguration {
+            ...
+        }
+    }
+
+    package Initialization {
+        class DataInitializationScript {
+            -DataContext
+            -SecurityService
+            +Run()
+        }
+    }
+
+    package Util {
+        class DataSerializer {
+            -Configuration
+            +Serialize()
+            +Deserialize()
+        }
+    }
+
+    MysqlConfiguration --|> ContextConfiguration
+    SqliteConfiguration --|> ContextConfiguration
+
+    class DataContext {
+        +DBSet<TEntity>
+        +SaveChanges()
+        +SaveChangesAsync()
+        +OnModelCreating()
+    }
+
+    DataContext --> MysqlConfiguration
+    DataContext --> SqliteConfiguration
+    DataInitializationScript --> DataContext
+}
+
+package Middleware {
+    package Security {
+        package Requirement {
+            interface ISecurityRequirement {
+                +GetRequiredPermissions()
+            }
+            class DefaultAuthorizationRequirement {
+                -PolicyCode
+            }
+            class LeaderAuthorizationRequirement {
+                -PolicyCode
+            }
+            class TeacherAuthorizationRequirement {
+                -PolicyCode
+            }
+            class AdminAuthorizationRequirement {
+                -PolicyCode
+            }
+        }
+
+        DefaultAuthorizationRequirement --|> ISecurityRequirement
+        LeaderAuthorizationRequirement --|> ISecurityRequirement
+        TeacherAuthorizationRequirement --|> ISecurityRequirement
+        AdminAuthorizationRequirement --|> ISecurityRequirement
+
+        class PolicyAuthorizationHandler {
+            +HandleRequirementAsync()
+        }
+
+        PolicyAuthorizationHandler --> DefaultAuthorizationRequirement
+        PolicyAuthorizationHandler --> LeaderAuthorizationRequirement
+        PolicyAuthorizationHandler --> TeacherAuthorizationRequirement
+        PolicyAuthorizationHandler --> AdminAuthorizationRequirement
+    }
+
+    class ExceptionHandler {
+        -RequestDelegate
+        -IsDebugMode
+        +InvokeAsync()
+    }
+}
+
+Program --> ConfigurationManager
+Program --> DataContext
+Program --> DataInitializationScript
+Program --> ExceptionHandler
+Program --> PolicyAuthorizationHandler
+@enduml

@@ -1,0 +1,132 @@
+@startuml
+' Диаграмма: Security/Account/Role (Model, Controller, Service)
+
+package Model {
+    package Security {
+        class Account {
+            +RoleId
+            +GropuId
+            +IdentityId
+            +Email
+            +Name
+            +Surname
+            +Patronymic
+            +MustChangePassword
+            +Configure()
+        }
+        class Role {
+            +Name
+            +Permission
+            +TokenLifetimeSeconds
+            +CanRegister
+            +Configure()
+        }
+    }
+
+    class Entity {
+        +CreatedAt
+        +UpdatedAt
+        +Configure()
+    }
+
+    class IdentifiableEntity {
+        +Id
+    }
+
+    IdentifiableEntity --|> Entity
+    Account --|> IdentifiableEntity
+    Role --|> IdentifiableEntity
+}
+
+package Controller {
+    package Security {
+        class AccountController {
+            -AccountService
+            +Get()
+            +GetByGroup()
+            +GetByRole()
+            +Post()
+            +Delete()
+        }
+        class RoleController {
+            -RoleService
+            +Get()
+            +GetDefault()
+            +GetByAccount()
+            +GetByPermission()
+            +Post()
+            +Delete()
+        }
+        class SecurityController {
+            -DataContext
+            -TokenService
+            -AccountService
+            -RoleService
+            -SecurityService
+            +GetSettings()
+            +AuthorizeUser()
+            +RegisterNewUser()
+            +CreateNewUser()
+            +RefreshToken()
+            +ChangePassword()
+            -CreateNewUserInternal()
+        }
+    }
+}
+
+package Service {
+    package Security {
+        class AccountService {
+            -UserManager
+            +GetByRole()
+            +GetByGroup()
+            +GetByIdentityId()
+            +Set()
+            +Remove()
+            -HasSameIdentities()
+        }
+        class RoleService {
+            +GetDefault()
+            +GetByAccount()
+            +GetByPermission()
+        }
+        class SecurityService {
+            -SecurityConfiguration
+            -DataContext
+            -RoleService
+            -UserManager
+            +CreateDefaultUser()
+            +CanRegisterWithPermission()
+        }
+        class TokenService {
+            -TokenConfiguration
+            +FindTokenClaimValue()
+            +CreateNewToken()
+            -CreateTokenClaims()
+        }
+    }
+
+    class DataEntityService {
+        -DataContext
+        +Get<TSource>()
+        +Set<TSource>()
+        +Remove<TSource>()
+        -DetachTrackedEntities<TSource>()
+    }
+
+    AccountService --|> DataEntityService
+    RoleService --|> DataEntityService
+}
+
+AccountController --> AccountService
+RoleController --> RoleService
+SecurityController --> SecurityService
+SecurityController --> TokenService
+SecurityController --> AccountService
+SecurityController --> RoleService
+
+AccountService --> Account
+RoleService --> Role
+SecurityService --> RoleService
+
+@enduml

@@ -38,7 +38,7 @@ public class MarkTypeController(DataEntityService dataEntityService) : Controlle
     /// </summary>
     /// <param name="entities">Список типов оценивания.</param>
     /// <returns>Результат операции.</returns>
-    [Authorize(Policy = TeacherAuthorizationRequirement.PolicyCode)]
+    [Authorize(Policy = AdminAuthorizationRequirement.PolicyCode)]
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] List<MarkType> entities)
     {
@@ -57,9 +57,9 @@ public class MarkTypeController(DataEntityService dataEntityService) : Controlle
     /// </summary>
     /// <param name="ids">Список идентификаторов.</param>
     /// <returns>Результат операции.</returns>
-    [Authorize(Policy = TeacherAuthorizationRequirement.PolicyCode)]
+    [Authorize(Policy = AdminAuthorizationRequirement.PolicyCode)]
     [HttpDelete]
-    public async Task<IActionResult> Delete([FromBody] List<int> ids)
+    public async Task<IActionResult> Delete([FromQuery] List<int> ids)
     {
         var status = await DataEntityService.Remove(DataEntityService.DataContext.MarkTypes, ids);
 

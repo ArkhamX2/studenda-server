@@ -85,7 +85,7 @@ public class SessionController(SessionService sessionService) : ControllerBase
     /// <returns>Результат операции.</returns>
     [Authorize(Policy = TeacherAuthorizationRequirement.PolicyCode)]
     [HttpDelete]
-    public async Task<IActionResult> Delete([FromBody] List<int> ids)
+    public async Task<IActionResult> Delete([FromQuery] List<int> ids)
     {
         var status = await SessionService.Remove(SessionService.DataContext.Sessions, ids);
 

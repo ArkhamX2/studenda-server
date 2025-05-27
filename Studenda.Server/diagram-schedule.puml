@@ -1,0 +1,156 @@
+@startuml
+' Диаграмма: Schedule (Subject, Lesson, Timeslot) — Model, Controller, Service
+
+package Model {
+    package Schedule {
+        class Subject {
+            +DisciplineId
+            +SubjectPositionId
+            +DayPositionId
+            +WeekTypeId
+            +SubjectTypeId
+            +AccountId
+            +GroupId
+            +AcademicYear
+            +Classroom
+            +Description
+            +Configure()
+        }
+        class WeekType {
+            +Index
+            +Name
+            +Configure()
+        }
+        class Discipline {
+            +Name
+            +Description
+            +AccountId
+            +Configure()
+        }
+        class SubjectPosition {
+            +Index
+            +StartLabel
+            +EndLabel
+            +Name
+            +Configure()
+        }
+        class DayPosition {
+            +Index
+            +Name
+            +Configure()
+        }
+        class SubjectType {
+            +Name
+            +Configure()
+        }
+    }
+
+    class Entity {
+        +CreatedAt
+        +UpdatedAt
+        +Configure()
+    }
+
+    class IdentifiableEntity {
+        +Id
+    }
+
+    IdentifiableEntity --|> Entity
+    Subject --|> IdentifiableEntity
+    WeekType --|> IdentifiableEntity
+    Discipline --|> IdentifiableEntity
+    SubjectPosition --|> IdentifiableEntity
+    DayPosition --|> IdentifiableEntity
+    SubjectType --|> IdentifiableEntity
+}
+
+package Controller {
+    package Schedule {
+        class SubjectController {
+            -SubjectService
+            +Get()
+            +GetAllByGroup()
+            +GetByGroup()
+            +GetAllByAccount()
+            +GetByAccount()
+            +Post()
+            +Delete()
+        }
+        class DisciplineController {
+            -DataEntityService
+            +Get()
+            +Post()
+            +Delete()
+        }
+        class DayPositionController {
+            -DataEntityService
+            +Get()
+            +Post()
+            +Delete()
+        }
+        class SubjectPositionController {
+            -DataEntityService
+            +Get()
+            +Post()
+            +Delete()
+        }
+        class SubjectTypeController {
+            -DataEntityService
+            +Get()
+            +Post()
+            +Delete()
+        }
+        class WeekTypeController {
+            -WeekTypeService
+            +Get()
+            +GetCurrent()
+            +Post()
+            +Delete()
+        }
+    }
+}
+
+package Service {
+    package Schedule {
+        class SubjectService {
+            +GetAllByGroup()
+            +GetByGroup()
+            +GetAllByAccount()
+            +GetByAccount()
+        }
+        class WeekTypeService {
+            +GetCurrent()
+            +Set()
+            +Remove()
+        }
+    }
+
+    class DataEntityService {
+        -DataContext
+        +Get()
+        +Set()
+        +Remove()
+        -DetachTrackedEntities()
+    }
+
+    SubjectService --|> DataEntityService
+    WeekTypeService --|> DataEntityService
+}
+
+' Связи между слоями
+SubjectController --> SubjectService
+DisciplineController --> DataEntityService
+DayPositionController --> DataEntityService
+SubjectPositionController --> DataEntityService
+SubjectTypeController --> DataEntityService
+WeekTypeController --> WeekTypeService
+
+SubjectService --> Subject
+WeekTypeService --> WeekType
+
+DataEntityService --> Discipline
+DataEntityService --> DayPosition
+DataEntityService --> SubjectPosition
+DataEntityService --> SubjectType
+
+@enduml

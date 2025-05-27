@@ -83,9 +83,9 @@ public class AbsenceController(AbsenceService absenceService) : ControllerBase
     /// </summary>
     /// <param name="ids">Список идентификаторов.</param>
     /// <returns>Результат операции.</returns>
-    [Authorize(Policy = AdminAuthorizationRequirement.PolicyCode)]
+    [Authorize(Policy = TeacherAuthorizationRequirement.PolicyCode)]
     [HttpDelete]
-    public async Task<IActionResult> Delete([FromBody] List<int> ids)
+    public async Task<IActionResult> Delete([FromQuery] List<int> ids)
     {
         var status = await AbsenceService.Remove(AbsenceService.DataContext.Absences, ids);
 

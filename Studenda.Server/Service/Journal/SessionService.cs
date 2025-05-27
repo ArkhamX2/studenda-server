@@ -33,7 +33,8 @@ public class SessionService(DataContext dataContext) : DataEntityService(dataCon
 
         return await DataContext.Sessions
             .Where(session => session.SubjectId == subjectId
-                && datesHashSet.Contains(session.StartedAt.GetValueOrDefault().Date))
+                && session.StartedAt != null
+                && datesHashSet.Contains(session.StartedAt.Value.Date))
             .ToListAsync();
     }
 
@@ -53,7 +54,8 @@ public class SessionService(DataContext dataContext) : DataEntityService(dataCon
 
         return await DataContext.Sessions
             .Where(session => subjectIds.Contains(session.SubjectId)
-                && session.StartedAt.GetValueOrDefault().Date == date.Date)
+                && session.StartedAt != null
+                && session.StartedAt.Value.Date == date.Date)
             .ToListAsync();
     }
 }
