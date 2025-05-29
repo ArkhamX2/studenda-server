@@ -40,6 +40,18 @@ internal class Program
         RegisterAuthenticationServices(builder.Services, configuration.TokenConfiguration);
         RegisterCorsServices(builder.Services);
 
+        // // EmailService
+        // builder.Services.AddSingleton(new EmailService(
+        //     smtpServer: "smtp.example.com",
+        //     smtpPort: 587,
+        //     smtpUser: "your_email@example.com",
+        //     smtpPass: "your_password",
+        //     fromEmail: "your_email@example.com",
+        //     fromName: "Studenda"
+        // ));
+        // // Регистрация фонового сервиса
+        // builder.Services.AddHostedService<AbsenceNotificationService>();
+
         var application = builder.Build();
 
         RunApplication(application);
